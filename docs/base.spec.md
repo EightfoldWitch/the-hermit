@@ -6,6 +6,7 @@ Web application that allows a user to generate and track their tarot readings.  
 * Electron Frontend Application for desktop and mobile
 * NodeJs backend web server
 * PostgreSQL Database
+* Docker containers for web frontend, nodejs backend, postgres db
 
 ## Database Schema
 ### Readings
@@ -47,6 +48,21 @@ Web application that allows a user to generate and track their tarot readings.  
 * cards_key
 * cards_suite
 * cards_number
+
+### CardMeanings
+* meaning_key
+* cards_key
+* users_key
+* meaning_text
+
+### CardTags
+* cardtags_key
+* cardtags_tag
+
+### CardTagLink
+* cards_key
+* users_key
+* cardtags_key
 
 ### CardSkins
 * cardskin_key
@@ -114,9 +130,18 @@ Update the home tiles configuration for the user.
 #### /reading/read
 * Url Params
   * key - (string)|'last'
+#### /reading/impressions
+* Url Params
+  * key - (string)
 #### /reading/stats
 * Url Params
-  * type - [basic]
+  * type - [basic|card_count]
+  * limit - (int)
+  * range - [month]
+#### /reading/stats/cards
+* Url Params
+  * limit - (int)
+  * range - [month]
 
 #### /msgs/list
 * Url Params
@@ -238,25 +263,51 @@ Home dashboard for users, displaying a list of configurable tiles.
   * Quick Reading
 
 #### Tile - Last Reading
-Displays a graphical spread of the last reading done, the date, and the impression tags associated.  If there is a reading note, displays a truncated version at the bottom.  The top right lists the count of notes attached to it.  Uses the 
+Displays a graphical spread of the last reading done, the date, and the impression tags associated.  If there is a reading note, displays a truncated version at the bottom.  The top right lists the count of notes attached to it.
+* Update data using /reading/read?key=last
 
 #### Tile - Reading Trends
 
 #### Tile - Reading Most Common
+Displays the top 5 most common cards over the last month in a grid.  Column for card name, frequency this week, frequency this month, frequency last month.  Uses /reading/stats/cards?limit=5&range=month to query.
 
 #### Tile - Reading History
+Grid list of readings, showing the last 5 readings as rows.  Columns are date of reading, first 3 cards as mini card images, and first 2 readings tags if any, or short summary of readings notes if no tags are available.
 
 #### Tile - Shared Readings
 
 #### Tile - Recent Messages
 
 #### Tile - Quick Reading
+Displays a 3 card past-present-future spread, face down.  A Read button is at the bottom, which generates and displays all 3 cards, or the user can click on each card to reveal one by one.  Once revealed, a Save button replaces the Read button, which when clicked saves the reading as the latest, and goes to the reading edit page for this reading.
 
 #### Page - Reading Create
+Page to create a new reading.
+* A list of reading types are along the left side, displayed as graphical images of the spreads;  hovering displays a popup with the name, and a brief description of what the spread is used for.
+* Clicking a reading type displays the spread in the center, with all cards face down, using the user's selected card theme for the image.  
+* On the right of the screen is an impressions panel.
+
+#### Panel - Impressions
+Displays impressions and tags for a reading, and allows adding new ones.
+* Vertical panel, with a dynamic list of impressions running downwards.  Each impression has a timestamp of when it was made, the user that made it, and the text of the impression.
+* A text box displays a list of tags, each of which is a clickable rectangle, with a X on the right to remove.
+* A + button at the top right of the tag box allows adding a new tag.
+* A + button at the top right of the impression list shows a text box to enter a new impression.  Clicking ctl+enter, or clicking the small Save button at the bottom right of the box saves the impression to the list.
+* Uses 
+
+#### Page - Card Lookup
 
 #### Page - Reading History Grid
+Grid list of readings, displayed either as rows of readings with details, or tiles with snapshots.  A toggle switch on the top bar allows switching betwen the two.
+* Row Mode - Displays 4 columns, with each row being a reading.  Clicking the column header sorts the readings by that column.  The columns are:
+  * Date of Reading
+  * First 3 cards of reading as mini card images.  Clicking the cards goes to Page - Reading View.
+  * Short summary of reading notes
+  * First 3 reading tags.
 
 #### Page - Reading View
+Displays a reading and the attached notes.  The cards are displayed as images in the top center, arranged according to the spread type, and using the user's selected image theme.  The date of the reading is shown at the top, and the list of impressions and tags are displayed using the impressions panel to the right.
+* Use /reading/read?key={key} to get the reading info to display.
 
 #### Page - Reading Statistics
 
@@ -299,3 +350,61 @@ The admin dashboard provides an interface for administrators to view and manage 
 #### Tile - Web Server Stats
 
 #### Tile - Users Cache
+
+
+
+## Phases
+### Phase 1
+* Webapi Backend server, limited to the following apis
+  * #### /users/login
+  * #### /status
+  * #### /users/logout
+  * #### /users/info
+  * #### /users/settings
+  * #### /users/list
+  * #### /reading/create
+  * #### /reading/edit
+  * #### /reading/delete
+  * #### /reading/list
+  * #### /reading/read
+  * #### /reading/impressions
+* Postgresql db server
+* sample js scripts to test api
+  * create readings
+  * list readings
+  * get reading
+  * delete reading
+* sample js scripts to init the db
+  * create tables
+  * clear tables
+  * delete tables
+  * create user
+  * execute sql statement
+
+### Phase 2
+* Regular user only Frontend Web Server, limited to the following pages and tiles
+  * Page - Home
+  * Bar - Menu
+  * Bar - Info
+  * Tile - Last Reading
+  * Tile - Reading History
+  * Page - Create Reading
+  * Page - Reading History
+  * Panel - Impressions
+
+### Phase 3 - Admin Dashboard
+* Add the Admin Dashboard elements to the Frontend Web Server
+  * Bar - Menu
+  * Page - Home
+  * Tile - Users Stats
+  * Tile - Server Stats
+  * Page - Users
+  * Tile - Users List
+* Add the admin cmds to the backend nodejs server
+  * /users/list
+  * /users/info/{uid} 
+
+### Phase 4 - Messages
+* Add message support to the backend api
+* Add message support to the user ui
+* Add message support to the admin ui
