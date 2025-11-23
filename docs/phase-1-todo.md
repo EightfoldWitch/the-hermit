@@ -289,6 +289,9 @@ Create sample JavaScript scripts to test the APIs:
   - Response formats (success and error)
   - Authentication requirements
   - Example requests and responses
+  - Document each api endpoint in its own file
+
+- [ ] Create top level api endpoint document, with links to individual endpoints
 
 - [ ] Document database schema:
   - Table relationships

@@ -121,7 +121,25 @@ User webapis are ones which only apply to normal users, and which use the user t
 Update the home tiles configuration for the user.
 
 #### /reading/create
+* Reading Data
+  * Card List
+    * Card ID
+    * Spread Position
+  * Spread ID
+  * Impressions
+    * String List
+  * Tags
+    * String List
 #### /reading/edit
+* Reading Data
+  * Card List
+    * Card ID
+    * Spread Position
+  * Spread ID
+  * Impressions
+    * String List
+  * Tags
+    * String List
 #### /reading/share
 #### /reading/delete
 #### /reading/analyze_image
