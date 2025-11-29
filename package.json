@@ -1,0 +1,31 @@
+{
+  "name": "the-hermit",
+  "version": "1.0.0",
+  "description": "Tarot Manager - Web application for generating and tracking tarot readings",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "create-tables": "node tasks/create_tables.js",
+    "clear-tables": "node tasks/clear_tables.js",
+    "delete-tables": "node tasks/delete_tables.js",
+    "create-user": "node tasks/create_user.js",
+    "execute-sql": "node tasks/execute_sql.js",
+    "insert-cards": "node tasks/insert_cards.js"
+  },
+  "keywords": ["tarot", "reading", "manager"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.11.3",
+    "bcrypt": "^5.1.1",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
+
